@@ -43,10 +43,22 @@ INSERT INTO temp.new_vendor (vendor_name, vendor_id, vendor_type, vendor_owner_f
 
 HINT: you might need to search for strfrtime modifers sqlite on the web to know what the modifers for month 
 and year are! */
+SELECT DISTINCT 
+customer_id, 
+strftime('%Y', market_date) AS year,
+strftime('%m', market_date) AS months,
+strftime('%d', market_date) AS day
+FROM customer_purchases
 
 /* 2. Using the previous query as a base, determine how much money each customer spent in April 2019. 
 Remember that money spent is quantity*cost_to_customer_per_qty. 
 
 HINTS: you will need to AGGREGATE, GROUP BY, and filter...
 but remember, STRFTIME returns a STRING for your WHERE statement!! */
-
+SELECT DISTINCT 
+customer_id, 
+SUM(cost_to_customer_per_qty * quantity) AS money_spent_in_2019_04
+FROM customer_purchases 
+WHERE strftime('%Y', market_date)='2019' 
+AND strftime('%m', market_date)='04'
+GROUP BY customer_id;
