@@ -8,7 +8,21 @@ Remember, CROSS JOIN will explode your table rows, so CROSS JOIN should likely b
 Think a bit about the row counts: how many distinct vendors, product names are there (x)?
 How many customers are there (y). 
 Before your final group by you should have the product of those two queries (x*y).  */
-
+SELECT p.product_name, v.vendor_name, x.cost_5_products  FROM (
+	SELECT
+	vendor_id,
+	product_id,
+	SUM(CAST(original_price as float) * 5) as cost_5_products
+FROM ( 
+	SELECT DISTINCT vi.vendor_id, vi.product_id, vi.original_price FROM vendor_inventory vi
+	)
+CROSS JOIN (
+	SELECT customer_id FROM customer
+	)
+GROUP by product_id
+) as x
+INNER JOIN product AS p ON p.product_id = x.product_id
+INNER JOIN vendor AS v ON v.vendor_id = x.vendor_id
 
 
 -- INSERT
