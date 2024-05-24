@@ -83,7 +83,12 @@ FROM product
 
 
 /* 2. Filter the query to show any product_size value that contain a number with REGEXP. */
-
+SELECT 
+	product_name,
+	product_size,
+	CASE WHEN INSTR(product_name,'-') > 0 THEN trim(substr(product_name, INSTR(product_name,'-')+2)) ELSE '' END as description
+FROM product
+WHERE product_size REGEXP '.*\d.*';
 
 
 -- UNION
@@ -95,7 +100,15 @@ HINT: There are a possibly a few ways to do this query, but if you're struggling
 "best day" and "worst day"; 
 3) Query the second temp table twice, once for the best day, once for the worst day, 
 with a UNION binding them. */
+DROP TABLE IF EXISTS temp.daily_revenue;
+CREATE TEMPORARY TABLE temp.daily_revenue AS 
+SELECT market_date, CAST(SUM(price) as float) as cash_flow
+FROM (
+	SELECT market_date, quantity * cost_to_customer_per_qty as price
+	FROM customer_purchases
+)
+GROUP by market_date;
 
-
-
-
+SELECT market_date, max(cash_flow) FROM temp.daily_revenue
+UNION
+SELECT market_date, min(cash_flow) FROM temp.daily_revenue;
