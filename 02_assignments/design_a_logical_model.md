@@ -1,12 +1,16 @@
 # Assignment 1: Design a Logical Model
 
 ## Question 1
-Create a logical model for a small bookstore. 📚
+Create a logical model for a small bookstore. 📚 
+
+[bookstore1](./bookstore1.drawio.png)
 
 At the minimum it should have employee, order, sales, customer, and book entities (tables). Determine sensible column and table design based on what you know about these concepts. Keep it simple, but work out sensible relationships to keep tables reasonably sized. Include a date table. There are several tools online you can use, I'd recommend [_Draw.io_](https://www.drawio.com/) or [_LucidChart_](https://www.lucidchart.com/pages/).
 
 ## Question 2
 We want to create employee shifts, splitting up the day into morning and evening. Add this to the ERD.
+
+[bookstore2](./bookstore2.drawio.png)
 
 ## Question 3
 The store wants to keep customer addresses. Propose two architectures for the CUSTOMER_ADDRESS table, one that will retain changes, and another that will overwrite. Which is type 1, which is type 2?
@@ -15,7 +19,8 @@ _Hint, search type 1 vs type 2 slowly changing dimensions._
 
 Bonus: Are there privacy implications to this, why or why not?
 ```
-Your answer...
+Type 1 SCD is model where we would overwrite address and Type 2 model is about archiving the old adresses. for Type 1 no specific architecture is needed, we just overwrite old address in the CUSTOMER_ADDRESS table with UPDATE command when user inputs new address. For type 2, I would propose to use same table if there is no much users and we often need this information (i.e. to show to the user all his addresses to give him opportunity to quickly choose where to make a delivery). Only we need to use a flag column, like `is_current` in CUSTOMER_ADDRESS table. On the other hand if we have a lot of users and outdated addresses are rarely used, we could create another table CUSTOMER_ADDRESS_ARCIVED and move old user address from CUSTOMER_ADDRESS table to CUSTOMER_ADDRESS_ARCIVED and save a new address to the CUSTOMER_ADDRESS table
+I do not think there is any impact to privacy as user already gave as a permission to store the address when he entered it, so I think it is not a problem if we keep it.
 ```
 
 ## Question 4
@@ -23,7 +28,7 @@ Review the AdventureWorks Schema [here](https://i.stack.imgur.com/LMu4W.gif)
 
 Highlight at least two differences between it and your ERD. Would you change anything in yours?
 ```
-Your answer...
+Obviously I have a much simpler model. Interesting detail: the email address is stored in a separate table. I assume it is done because Person can store few email addresses, another difference the AdventureWorks Schema has a Person table and it is related to Employee and Customer tables. I think, this could be implemented in my model
 ```
 
 # Criteria
